@@ -34,12 +34,7 @@ const user=await registerService({ name, email, password ,url});
 
 global.io.emit('profileInfo', user);
 
-const token=user.generateAuthToken()
-res.cookie('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', 
-    sameSite: 'strict' 
-})
+
 
 res.status(201).json({msg:'User registered successfully', user,token})
    
@@ -63,11 +58,7 @@ export const login=async(req,res)=>{
 
         const token=user.generateAuthToken();
         
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', 
-            sameSite: 'strict' 
-        });
+        res.cookie('token', token);
         res.status(200).json({msg:'User logged in successfully', user,token})
     } catch (error) {
         res.status(500).json({msg:'Error logging in user',error:error.message});
