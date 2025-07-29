@@ -9,19 +9,19 @@ export const verifyUser=async(req,res,next)=>{
 
         const token=req.cookies.token
         if(!token){
-            return res.status(401).json({msg:'Unauthorized access, please login'});
+            return res.status(401).json({msg:'Unauthorized access, please login',token});
         }
         
         const BlackToken=await BlackListedToken.findOne({token})
 
         if(BlackToken){
-            return  res.status(401).json({msg:'Unauthorized access, please login'});
+            return  res.status(401).json({msg:'Unauthorized access, please login',token});
         }
         
         const decoded=jwt.verify(token,process.env.JWT_SECRET);
         const user=await User.findById(decoded._id);
         if(!user){
-            return res.status(401).json({msg:'Unauthorized access, user not found'});
+            return res.status(401).json({msg:'Unauthorized access, user not found'.token});
         }
         req.user=user; // Attach user to request object
         next();
