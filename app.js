@@ -12,7 +12,7 @@ import bodyParser from 'body-parser';
 
 const app=express();
 app.use(cors({
-  origin: ['https://taskflow123.netlify.app'],
+  origin: ['https://taskflow123.netlify.app','http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json());
