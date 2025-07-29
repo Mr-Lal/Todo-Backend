@@ -36,7 +36,7 @@ global.io.emit('profileInfo', user);
 
 
 
-res.status(201).json({msg:'User registered successfully', user,token})
+res.status(201).json({msg:'User registered successfully', user})
    
 
     } catch (error) {
