@@ -38,7 +38,7 @@ login
 router.get('/logout',Logout)
 
 router.get('/profile',verifyUser,Profile)
-router.get('/test',(req,res)=>{
-res.send('working user route')
+router.get('/register',(req,res)=>{
+res.send('register user route')
 })
 export default router;
