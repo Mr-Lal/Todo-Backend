@@ -22,7 +22,7 @@ app.use(cookieParser())
 connectDB();
 
 app.use('/api/user', userRoutes);
-app.use('/todo',todoRoutes)
+app.use('api/todo',todoRoutes)
 
 
 app.get('/',(req,res)=>{
