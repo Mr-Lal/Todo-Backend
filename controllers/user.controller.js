@@ -65,20 +65,46 @@ export const login=async(req,res)=>{
     }
 }
 
-export const Logout=async(req,res)=>{
-    try {
-      const token = req.cookies.token;
-        await BlackListedToken.create({
-    token,
-    expiresAt: new Date(Date.now() + 60 * 60 * 1000) // 1 hour expiry
-  });
+export const Logout = async (req, res) => {
+  try {
+    // 🟡 Try getting token from cookie
+    let token = req.cookies.token;
 
-        res.clearCookie('token');
-        res.status(200).json({msg:'User logged out successfully'});
-    } catch (error) {
-        res.status(500).json({msg:'Error logging out user',error:error.message});
+    // 🟡 If not found in cookie, check Authorization header
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      }
     }
-}
+
+    // ❌ If still no token, return error
+    if (!token) {
+      return res.status(400).json({ msg: 'No token found for logout' });
+    }
+
+    // ✅ Add to blacklist
+    await BlackListedToken.create({
+      token,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour expiry
+    });
+
+    // ✅ Clear the cookie
+    res.clearCookie('token', {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+    });
+
+    res.status(200).json({ msg: 'User logged out successfully' });
+  } catch (error) {
+    res.status(500).json({
+      msg: 'Error logging out user',
+      error: error.message,
+    });
+  }
+};
+
 
 export const Profile=async(req,res)=>{
     try {
